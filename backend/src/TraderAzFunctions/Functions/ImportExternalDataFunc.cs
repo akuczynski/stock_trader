@@ -1,10 +1,9 @@
 using System;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using TraderAzFunctions.InputDtos; 
 
 namespace TraderAzFunctions
 {
@@ -19,7 +18,9 @@ namespace TraderAzFunctions
 
         [FunctionName("ImportExternalDataFunc")]
         [return: Table("ImportAttempts")]
-        public async Task<ImportAttempt> Run([TimerTrigger("%ImportExternalDataSchedule%")] TimerInfo myTimer, ILogger log)
+        public async Task<ImportAttempt> Run([TimerTrigger("%ImportExternalDataSchedule%")] TimerInfo myTimer,
+                                                IBinder binder,
+                                                ILogger log)
         {
             ImportAttempt result = ImportDataResult(false);
 
@@ -33,9 +34,16 @@ namespace TraderAzFunctions
                     var responseContent = response.Content;
                     var data = await responseContent.ReadAsStringAsync();
 
-                    var tradeRecommendations = JsonConvert.DeserializeObject<TradeRecommendations[]>(data);
-
                     result = ImportDataResult(true);
+
+                    var outboundBlob = new BlobAttribute($"imported-data/{result.RowKey}.json", FileAccess.Write);
+                    using (var writer = binder.Bind<TextWriter>(outboundBlob))
+                    {
+                        writer.Write(data);
+                        writer.Flush();
+                    }
+
+                    log.LogDebug($"Imported data was stored on the blob in: {outboundBlob.BlobPath}");
                 }
 
             }
@@ -55,11 +63,10 @@ namespace TraderAzFunctions
             {
                 PartitionKey = $"{DateTime.Now.Year}:{DateTime.Now.Month.ToString("D2")}",
                 RowKey = Guid.NewGuid().ToString(),
-                Timestamp = DateTime.Now,
+                Timestamp = DateTimeOffset.Now,
                 IsSucceded = isSucceded
             };
         }
-
 
         public class ImportAttempt
         {

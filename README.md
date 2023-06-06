@@ -1,8 +1,10 @@
-# stock_trader
+# About
 
 Simple Az Function to fetch data from the external REST API.
 
-# testing 
+# Testing 
 
-For local testing you can use json server. 
-https://www.npmjs.com/package/json-server 
+For local testing I have used [json server](https://www.npmjs.com/package/json-server)
+
+Run Json server locally (workdir is resources folder): 
+>json-server --watch reddit.json
