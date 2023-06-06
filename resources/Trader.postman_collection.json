@@ -12,29 +12,57 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:7151/api/GetAllLogsFunc?from=2023-06-06 14:05:00&to=2023-06-06 16:00:00",
-					"protocol": "http",
+					"raw": "{{hostUrl}}/api/GetAllLogs?from=2023-06-06 18:20:00&to=2023-06-06 18:50:00",
 					"host": [
-						"localhost"
+						"{{hostUrl}}"
 					],
-					"port": "7151",
 					"path": [
 						"api",
-						"GetAllLogsFunc"
+						"GetAllLogs"
 					],
 					"query": [
 						{
 							"key": "from",
-							"value": "2023-06-06 14:05:00"
+							"value": "2023-06-06 18:20:00"
 						},
 						{
 							"key": "to",
-							"value": "2023-06-06 16:00:00"
+							"value": "2023-06-06 18:50:00"
 						}
 					]
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "GetLog",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{hostUrl}}/api/GetLog?id=f6895a96-40a8-4c2f-b459-61dd2a98d194",
+					"host": [
+						"{{hostUrl}}"
+					],
+					"path": [
+						"api",
+						"GetLog"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "f6895a96-40a8-4c2f-b459-61dd2a98d194"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "hostUrl",
+			"value": "http://localhost:7151"
 		}
 	]
 }

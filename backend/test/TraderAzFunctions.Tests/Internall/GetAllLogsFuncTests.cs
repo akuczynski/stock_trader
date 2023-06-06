@@ -42,7 +42,7 @@ namespace TraderAzFunctions.Tests.Internall
             DateTime dateFrom = DateTime.Now.AddHours(-1);
             DateTime dateTo = DateTime.Now;
 
-            var response = await httpClient.GetAsync(_azFuncUri + $"GetAllLogs?from={dateFrom}&to={dateTo}");
+            var response = await httpClient.GetAsync(_azFuncUri + $"api/GetAllLogs?from={dateFrom}&to={dateTo}");
 
             if (response.IsSuccessStatusCode)
             {
@@ -64,7 +64,7 @@ namespace TraderAzFunctions.Tests.Internall
             DateTime dateFrom = DateTime.Now.AddHours(1);
             DateTime dateTo = DateTime.Now;
 
-            var response = await httpClient.GetAsync(_azFuncUri + $"GetAllLogs?from={dateFrom}&to={dateTo}");
+            var response = await httpClient.GetAsync(_azFuncUri + $"api/GetAllLogs?from={dateFrom}&to={dateTo}");
 
             response.StatusCode.ShouldBeEquivalentTo(HttpStatusCode.BadRequest); 
         }

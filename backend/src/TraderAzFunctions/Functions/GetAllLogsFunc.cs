@@ -94,7 +94,7 @@ namespace TraderAzFunctions
             {
                 return (false, "\"to\" parameter has invalid format!");
             }
-            if (dateFrom > dateTo)
+            if (cvFromDate > cvToDate)
             {
                 return (false, "\"from\" can't be greater than \"to\" parameter !");
             }
