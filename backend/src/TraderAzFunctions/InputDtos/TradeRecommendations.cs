@@ -2,7 +2,7 @@
 
 namespace TraderAzFunctions.InputDtos
 {
-    internal class TradeRecommendations
+    public class TradeRecommendations
     {
         [JsonProperty("no_of_comments")]
         public int NumberOfComments { get; set; }
