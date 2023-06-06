@@ -25,6 +25,7 @@ namespace TraderAzFunctions.Tests.Internall
             Assert.DoesNotThrowAsync(async () => {
                 importLog = await importFunc.ImportData(mockedBinder, mockedLogger);
                 importLog.ShouldNotBeNull();   
+                importLog.IsSucceded.ShouldBeTrue();
             });            
         }
     }

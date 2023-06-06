@@ -3,10 +3,8 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Shouldly;
-using System;
 using System.Configuration;
 using System.Net;
-using System.Security.Cryptography;
 using TraderAzFunctions.Entities;
 using TraderAzFunctions.InputDtos;
 
@@ -26,6 +24,7 @@ namespace TraderAzFunctions.Tests.Internall
         [SetUp]
         public async Task Init()
         {
+            // this Init method could be moved to the test base class 
             Environment.SetEnvironmentVariable("ImportURI", _tradingServiceUri);
 
             var importFunc = new ImportExternalDataFunc();
