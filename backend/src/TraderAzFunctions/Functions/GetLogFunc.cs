@@ -10,6 +10,9 @@ using System.Web.Http;
 
 namespace TraderAzFunctions
 {
+    /// <summary>
+    /// This Az Func returns payload of the specific log entry.  
+    /// </summary>
     public static class GetLogFunc
     {
         [FunctionName("GetLog")]
@@ -18,17 +21,30 @@ namespace TraderAzFunctions
             IBinder binder,
             ILogger log)
         {
-            string inputId = req.Query["id"];
-            if (string.IsNullOrEmpty(inputId) || !Guid.TryParse(inputId, out var blobId))
+            try
             {
-                return new BadRequestErrorMessageResult("\"id\" has invalid format");
+                string inputId = req.Query["id"];
+                if (string.IsNullOrEmpty(inputId) || !Guid.TryParse(inputId, out var blobId))
+                {
+                    return new BadRequestErrorMessageResult("\"id\" parameter was not send or has invalid format!");
+                }
+
+                var inputBlob = new BlobAttribute($"imported-data/{blobId}.json", FileAccess.Read);
+                using (var reader = binder.Bind<TextReader>(inputBlob))
+                {
+                    if (reader != null)
+                    {
+                        return new OkObjectResult(reader.ReadToEnd());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.LogError($"GetLogFunc got an exception: {ex.Message}");
             }
 
-            var inputBlob = new BlobAttribute($"imported-data/{blobId}.json", FileAccess.Read);
-            using (var reader = binder.Bind<TextReader>(inputBlob))
-            {
-                return new OkObjectResult(reader.ReadToEnd());
-            }
+            // return empty response in case when file was removed from the blob storage or if exception was thrown 
+            return new OkObjectResult("");
         }
     }
 }

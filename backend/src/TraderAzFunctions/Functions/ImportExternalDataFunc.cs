@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
@@ -8,6 +9,11 @@ using TraderAzFunctions.Entities;
 
 namespace TraderAzFunctions
 {
+    /// <summary>
+    /// This Az Func sends request to the externall API. 
+    /// Received response is stored as a JSON file on the blob storage. 
+    /// Each request to the externall API is logged in the ImportLog table. 
+    /// </summary>
     public class ImportExternalDataFunc
     {
         // HttpClient should be defined as static field to avoid connection exceeded issue.
@@ -22,6 +28,12 @@ namespace TraderAzFunctions
         public async Task<ImportLog> Run([TimerTrigger("%ImportExternalDataSchedule%")] TimerInfo myTimer,
                                                 IBinder binder,
                                                 ILogger log)
+        {
+            return await ImportData(binder, log);
+        }
+
+        // I added this method to simplify implementation of unit test 
+        internal async Task<ImportLog> ImportData(IBinder binder, ILogger log)
         {
             ImportLog result = ImportDataResult(false);
 
@@ -50,7 +62,7 @@ namespace TraderAzFunctions
             }
             catch (Exception ex)
             {
-                log.LogError($"ImportExternalDataFunc got exception: {ex.Message}");
+                log.LogError($"ImportExternalDataFunc got an exception: {ex.Message}");
                 result = ImportDataResult(false);
             }
 

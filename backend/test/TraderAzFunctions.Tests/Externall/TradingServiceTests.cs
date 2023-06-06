@@ -14,7 +14,7 @@ namespace TraderAzFunctions.Tests.Externall
         private readonly HttpClient httpClient = new HttpClient();
 
         [Test]
-        public async Task CheckGetRedditCall()
+        public async Task VerifyCallToExternalAPI()
         {
             var response = await httpClient.GetAsync(_uri);
             StockRecommendationInputDto[]? stockRecommendations = null;

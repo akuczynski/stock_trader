@@ -16,6 +16,9 @@ using System.Linq;
 
 namespace TraderAzFunctions
 {
+    /// <summary>
+    /// This Az Func returns list of all log entries from the ImportLog table for the requested time frame (in local time). 
+    /// </summary>
     public static class GetAllLogsFunc
     {
         [FunctionName("GetAllLogs")]
@@ -24,32 +27,40 @@ namespace TraderAzFunctions
             [Table("ImportLog")] TableClient tableClient,
             ILogger log)
         {
-            // input dates should represent local datetime (without timezone offset), ex. 2023-06-06 13:45:00  
-            (bool isInnputValid, string errorMessage) = ParseAndValidateInputDates(req, out var dateFrom, out var dateTo);
-
-            if (!isInnputValid)
-            {
-                return new BadRequestErrorMessageResult(errorMessage);
-            }
-
-            AsyncPageable<ImportLog> queryResults = tableClient.QueryAsync<ImportLog>(filter:
-                x => x.Timestamp >= dateFrom
-                  && x.Timestamp <= dateTo);
-
             var result = new List<ImportLogOutputDto>();
 
-            await foreach (ImportLog entity in queryResults)
+            try
             {
-                // convert utc time to local time 
-                var localTime = ((DateTimeOffset)entity.Timestamp).ToLocalTime();
+                // input dates should represent local datetime (without timezone offset), ex. 2023-06-06 13:45:00  
+                (bool isInnputValid, string errorMessage) = ParseAndValidateInputDates(req, out var dateFrom, out var dateTo);
 
-                // in the real application I recommned to use Automapper 
-                result.Add(new ImportLogOutputDto
+                if (!isInnputValid)
                 {
-                    Id = entity.RowKey,
-                    IsSucceded = entity.IsSucceded,
-                    Timestamp = localTime.DateTime
-                });
+                    return new BadRequestErrorMessageResult(errorMessage);
+                }
+
+                AsyncPageable<ImportLog> queryResults = tableClient.QueryAsync<ImportLog>(filter:
+                    x => x.Timestamp >= dateFrom
+                      && x.Timestamp <= dateTo);
+
+
+                await foreach (ImportLog entity in queryResults)
+                {
+                    // convert utc time to local time 
+                    var localTime = ((DateTimeOffset)entity.Timestamp).ToLocalTime();
+
+                    // in the real application I recommned to use Automapper 
+                    result.Add(new ImportLogOutputDto
+                    {
+                        Id = entity.RowKey,
+                        IsSucceded = entity.IsSucceded,
+                        Timestamp = localTime.DateTime
+                    });
+                }
+            }
+            catch(Exception ex)
+            {
+                log.LogError($"GetAllLogsFunc got an exception: {ex.Message}");
             }
 
             // tableClient does not support OrderBy 
