@@ -1,18 +1,18 @@
 {
 	"info": {
 		"_postman_id": "9e1e6349-179b-48b1-a82f-01d161811dcd",
-		"name": "StockTrader",
+		"name": "Trader",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "5434699"
 	},
 	"item": [
 		{
-			"name": "GetAllLogsFunc",
+			"name": "GetAllLogs",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:7151/api/GetAllLogsFunc",
+					"raw": "http://localhost:7151/api/GetAllLogsFunc?from=2023-06-06 14:05:00&to=2023-06-06 16:00:00",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -21,6 +21,16 @@
 					"path": [
 						"api",
 						"GetAllLogsFunc"
+					],
+					"query": [
+						{
+							"key": "from",
+							"value": "2023-06-06 14:05:00"
+						},
+						{
+							"key": "to",
+							"value": "2023-06-06 16:00:00"
+						}
 					]
 				}
 			},

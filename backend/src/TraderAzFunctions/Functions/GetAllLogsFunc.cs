@@ -18,7 +18,7 @@ namespace TraderAzFunctions
 {
     public static class GetAllLogsFunc
     {
-        [FunctionName("GetAllLogsFunc")]
+        [FunctionName("GetAllLogs")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
             [Table("ImportLog")] TableClient tableClient,

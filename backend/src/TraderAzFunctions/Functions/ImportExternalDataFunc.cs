@@ -17,7 +17,7 @@ namespace TraderAzFunctions
 
         private static readonly string _uri = Environment.GetEnvironmentVariable("ImportURI"); 
 
-        [FunctionName("ImportExternalDataFunc")]
+        [FunctionName("ImportExternalData")]
         [return: Table("ImportLog")]
         public async Task<ImportLog> Run([TimerTrigger("%ImportExternalDataSchedule%")] TimerInfo myTimer,
                                                 IBinder binder,
@@ -64,7 +64,6 @@ namespace TraderAzFunctions
             {
                 PartitionKey = $"{DateTime.Now.Year}:{DateTime.Now.Month.ToString("D2")}",
                 RowKey = Guid.NewGuid().ToString(),
-           //     Timestamp = DateTimeOffset.Now,
                 IsSucceded = isSucceded
             };
         }

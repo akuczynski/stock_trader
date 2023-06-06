@@ -6,30 +6,29 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
+using System.Web.Http;
 
 namespace TraderAzFunctions
 {
     public static class GetLogFunc
     {
-        [FunctionName("GetLogFunc")]
+        [FunctionName("GetLog")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
+            IBinder binder,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            string inputId = req.Query["id"];
+            if (string.IsNullOrEmpty(inputId) || !Guid.TryParse(inputId, out var blobId))
+            {
+                return new BadRequestErrorMessageResult("\"id\" has invalid format");
+            }
 
-            string name = req.Query["name"];
-
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
-
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
-
-            return new OkObjectResult(responseMessage);
+            var inputBlob = new BlobAttribute($"imported-data/{blobId}.json", FileAccess.Read);
+            using (var reader = binder.Bind<TextReader>(inputBlob))
+            {
+                return new OkObjectResult(reader.ReadToEnd());
+            }
         }
     }
 }
