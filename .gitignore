@@ -1,0 +1,6 @@
+﻿backend/.vs/TradeAzFunctions/v17/.suo
+backend/.vs
+backend/test/TradeAzFunctions.Tests/obj
+backend/src/TradeAzFunctions/Properties/serviceDependencies.local.json
+backend/test/TraderAzFunctions.Tests/bin
+backend/test/TraderAzFunctions.Tests/obj
