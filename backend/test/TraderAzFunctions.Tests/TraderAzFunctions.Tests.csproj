@@ -14,7 +14,7 @@
     <ApplicationDefinition Include="testhost.dll.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </ApplicationDefinition>
-    <ApplicationDefinition Include="ExternallAPITradestieTests.cs">
+    <ApplicationDefinition Include="ExternallTradingServiceTests.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </ApplicationDefinition>
   </ItemGroup>

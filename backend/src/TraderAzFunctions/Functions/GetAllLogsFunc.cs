@@ -1,12 +1,18 @@
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
+using Azure.Data.Tables;
+using Azure;
+using TraderAzFunctions.Entities;
+using TraderAzFunctions.OutputDtos;
+using System.Collections.Generic;
+using System.Web.Http;
+using System.Globalization;
+using System.Linq;
 
 namespace TraderAzFunctions
 {
@@ -14,22 +20,65 @@ namespace TraderAzFunctions
     {
         [FunctionName("GetAllLogsFunc")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
+            [Table("ImportLog")] TableClient tableClient,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            // input dates should represent local datetime (without timezone offset), ex. 2023-06-06 13:45:00  
+            (bool isInnputValid, string errorMessage) = ParseAndValidateInputDates(req, out var dateFrom, out var dateTo);
 
-            string name = req.Query["name"];
+            if (!isInnputValid)
+            {
+                return new BadRequestErrorMessageResult(errorMessage);
+            }
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
+            AsyncPageable<ImportLog> queryResults = tableClient.QueryAsync<ImportLog>(filter:
+                x => x.Timestamp >= dateFrom
+                  && x.Timestamp <= dateTo);
 
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
+            var result = new List<ImportLogOutputDto>();
 
-            return new OkObjectResult(responseMessage);
+            await foreach (ImportLog entity in queryResults)
+            {
+                // convert utc time to local time 
+                var localTime = ((DateTimeOffset)entity.Timestamp).ToLocalTime();
+
+                // in the real application I recommned to use Automapper 
+                result.Add(new ImportLogOutputDto
+                {
+                    Id = entity.RowKey,
+                    IsSucceded = entity.IsSucceded,
+                    Timestamp = localTime.DateTime
+                });
+            }
+
+            // tableClient does not support OrderBy 
+            return new OkObjectResult(result.OrderBy(x => x.Timestamp));
+        }
+
+        private static (bool status, string errorMessage) ParseAndValidateInputDates(HttpRequest req, out DateTimeOffset dateFrom, out DateTimeOffset dateTo)
+        {
+            string from = req.Query["from"];
+            string to = req.Query["to"];
+
+            dateFrom = default;
+            dateTo = default;
+
+            // perform basic validation 
+            if (string.IsNullOrEmpty(from) || !DateTimeOffset.TryParse(from, null as IFormatProvider, DateTimeStyles.AdjustToUniversal, out dateFrom))
+            {
+                return (false, "\"from\" parameter has invalid format!");
+            }
+            if (string.IsNullOrEmpty(to) || !DateTimeOffset.TryParse(to, null as IFormatProvider, DateTimeStyles.AdjustToUniversal, out dateTo))
+            {
+                return (false, "\"to\" parameter has invalid format!");
+            }
+            if (dateFrom > dateTo)
+            {
+                return (false, "\"from\" can't be greater than \"to\" parameter !");
+            }
+
+            return (true, default);
         }
     }
 }

@@ -1,0 +1,30 @@
+{
+	"info": {
+		"_postman_id": "9e1e6349-179b-48b1-a82f-01d161811dcd",
+		"name": "StockTrader",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5434699"
+	},
+	"item": [
+		{
+			"name": "GetAllLogsFunc",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:7151/api/GetAllLogsFunc",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7151",
+					"path": [
+						"api",
+						"GetAllLogsFunc"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

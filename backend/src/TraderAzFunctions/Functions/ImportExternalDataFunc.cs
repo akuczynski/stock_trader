@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
+using TraderAzFunctions.Entities;
 
 namespace TraderAzFunctions
 {
@@ -17,12 +18,12 @@ namespace TraderAzFunctions
         private static readonly string _uri = Environment.GetEnvironmentVariable("ImportURI"); 
 
         [FunctionName("ImportExternalDataFunc")]
-        [return: Table("ImportAttempts")]
-        public async Task<ImportAttempt> Run([TimerTrigger("%ImportExternalDataSchedule%")] TimerInfo myTimer,
+        [return: Table("ImportLog")]
+        public async Task<ImportLog> Run([TimerTrigger("%ImportExternalDataSchedule%")] TimerInfo myTimer,
                                                 IBinder binder,
                                                 ILogger log)
         {
-            ImportAttempt result = ImportDataResult(false);
+            ImportLog result = ImportDataResult(false);
 
             try
             {
@@ -57,23 +58,15 @@ namespace TraderAzFunctions
             return result;
         }
 
-        private ImportAttempt ImportDataResult(bool isSucceded)
+        private ImportLog ImportDataResult(bool isSucceded)
         {
-            return new ImportAttempt
+            return new ImportLog
             {
                 PartitionKey = $"{DateTime.Now.Year}:{DateTime.Now.Month.ToString("D2")}",
                 RowKey = Guid.NewGuid().ToString(),
-                Timestamp = DateTimeOffset.Now,
+           //     Timestamp = DateTimeOffset.Now,
                 IsSucceded = isSucceded
             };
-        }
-
-        public class ImportAttempt
-        {
-            public string PartitionKey { get; set; }
-            public string RowKey { get; set; }
-            public DateTimeOffset? Timestamp { get; set; }
-            public bool IsSucceded { get; set; }
         }
     }
 }
