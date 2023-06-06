@@ -63,7 +63,9 @@ namespace TraderAzFunctions
             catch (Exception ex)
             {
                 log.LogError($"ImportExternalDataFunc got an exception: {ex.Message}");
-                result = ImportDataResult(false);
+
+                // this is required to correctly see information about failures in the monitor tab in Azure  
+                throw; 
             }
 
             log.LogDebug($"ImportExternalDataFunc has finished at: {DateTime.Now}");
