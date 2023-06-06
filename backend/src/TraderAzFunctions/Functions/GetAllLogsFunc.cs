@@ -43,7 +43,6 @@ namespace TraderAzFunctions
                     x => x.Timestamp >= dateFrom
                       && x.Timestamp <= dateTo);
 
-
                 await foreach (ImportLog entity in queryResults)
                 {
                     // convert utc time to local time 

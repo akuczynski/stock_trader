@@ -20,4 +20,4 @@ Run Json server locally (workdir is resources folder):
 
 - [Az Functions Input validations](https://www.tomfaltesek.com/azure-functions-input-validation/)
 - [How To set dynamically blob name](https://www.davidguida.net/how-to-dynamically-set-blob-name-in-an-azure-function/)
-
+- [FakeItEasy tutorial](https://techmindfactory.com/Easy-mocking-in-C-code-with-FakeItEasy-library/) 

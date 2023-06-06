@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using NUnit.Framework;
 using Shouldly;
 using System.Configuration;
 using TraderAzFunctions.InputDtos;
@@ -9,7 +8,7 @@ namespace TraderAzFunctions.Tests.Externall
     [TestFixture]
     public class TradingServiceTests
     {
-        private readonly string? _uri = ConfigurationManager.AppSettings["TradingServiceURI"];
+        private readonly string? _uri = ConfigurationManager.AppSettings["RealTradingServiceURI"];
 
         private readonly HttpClient httpClient = new HttpClient();
 

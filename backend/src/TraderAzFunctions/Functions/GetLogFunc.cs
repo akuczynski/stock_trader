@@ -24,7 +24,7 @@ namespace TraderAzFunctions
             try
             {
                 string inputId = req.Query["id"];
-                if (string.IsNullOrEmpty(inputId) || !Guid.TryParse(inputId, out var blobId))
+                if (string.IsNullOrEmpty(inputId) || !Guid.TryParse(inputId, out var blobId) || blobId == default)
                 {
                     return new BadRequestErrorMessageResult("\"id\" parameter was not send or has invalid format!");
                 }
