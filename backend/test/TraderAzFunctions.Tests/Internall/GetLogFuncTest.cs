@@ -61,12 +61,21 @@ namespace TraderAzFunctions.Tests.Internall
         }
 
         [Test]
-        public async Task InvalidInputParametsShoudReturnBadRequest()
+        public async Task InvalidInputParameterShoudReturnBadRequest()
         {
             Guid logId = default;
             var response = await httpClient.GetAsync(_azFuncUri + $"GetLog?id={logId}");
 
             response.StatusCode.ShouldBeEquivalentTo(HttpStatusCode.BadRequest);
+        }
+
+        public async Task InvalidInputParameterShoudReturnNotFoundRequest()
+        {
+            Guid logId = new Guid("c35f3318-5cd8-44b3-b7ff-0ac05f4517fa");
+
+            var response = await httpClient.GetAsync(_azFuncUri + $"GetLog?id={logId}");
+
+            response.StatusCode.ShouldBeEquivalentTo(HttpStatusCode.NotFound);
         }
     }
 }

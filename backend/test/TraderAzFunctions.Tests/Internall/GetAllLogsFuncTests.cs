@@ -59,7 +59,7 @@ namespace TraderAzFunctions.Tests.Internall
         }
 
         [Test]
-        public async Task InvalidInputParametsShoudReturnBadRequest()
+        public async Task InvalidInputParametersShoudReturnBadRequest()
         {
             DateTime dateFrom = DateTime.Now.AddHours(1);
             DateTime dateTo = DateTime.Now;

@@ -36,15 +36,18 @@ namespace TraderAzFunctions
                     {
                         return new OkObjectResult(reader.ReadToEnd());
                     }
+                    else
+                    {
+                        // return not found result when there is no such file for the corredponding id 
+                        return new NotFoundResult();
+                    }
                 }
             }
             catch (Exception ex)
             {
                 log.LogError($"GetLogFunc got an exception: {ex.Message}");
+                return new NoContentResult();
             }
-
-            // return empty response in case when file was removed from the blob storage or if exception was thrown 
-            return new OkObjectResult("");
         }
     }
 }
