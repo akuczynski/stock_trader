@@ -9,12 +9,21 @@ webix.ready(function(){
 			"height": 44,
 			"cols": [
 				{
-					"label": "Date range",
-					"value": {
-						"start": "2023-06-07 10:26:57",
-						"end": "2023-07-07 10:26:57"
+					"view":"daterangepicker", name:"datarange", label:"Date range",
+					"stringResult":true, 
+					"format":"%Y-%F-%d %H:%i", 
+					"suggest":{
+					  "view":"daterangesuggest",
+					  "body":{
+						"calendarCount":1,
+						"icons":false,
+						"timepicker":true
+					  }
 					},
-					"view": "daterangepicker",
+					"value": {
+						"start": "2023-06-06 08:00:00",
+						"end": "2023-06-08 10:00:00"
+					},
 					"height": 38
 				},
 				{
@@ -25,7 +34,7 @@ webix.ready(function(){
 			]
 		},
 		{
-			"url": "demo->64803f54258fc800116fef05",
+			"url": "https://traderazfunctions.azurewebsites.net/api/GetAllLogs?from=2023-06-07%2008:00:00&to=2023-06-07%2016:00:00",
 			"columns": [
 				{
 					"id": "id",
@@ -35,13 +44,13 @@ webix.ready(function(){
 				},
 				{
 					"id": "timestamp",
-					"header": "Date",
+					"header": "Date of import",
 					"fillspace": true,
 					"sort": "date",
 					"hidden": false
 				},
 				{
-					"id": "isSuccessed",
+					"id": "isSucceded",
 					"header": "Success",
 					"sort": "int",
 					"fillspace": false,
