@@ -50,8 +50,8 @@ namespace TraderAzFunctions
                     {
                         Id = entity.RowKey,
                         IsSucceded = entity.IsSucceded,
-                        Timestamp = entity.Timestamp.ConvertUTCToPolandLocalTime()
-                });
+                        Timestamp = entity.Timestamp.ConvertUTCToPolandLocalTime().ToString("MM/dd/yyyy HH:mm:ss")
+                    });
                 }
 
                 // tableClient does not support OrderBy 

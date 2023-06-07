@@ -1,5 +1,6 @@
 webix.ready(function () {
   webix.CustomScroll.init();
+  webix.i18n.setLocale("pl-PL");
 
   webix.ui({
     rows: [
