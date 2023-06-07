@@ -11,18 +11,16 @@ using TraderAzFunctions.Entities;
 using TraderAzFunctions.OutputDtos;
 using System.Collections.Generic;
 using System.Web.Http;
-using System.Globalization;
 using System.Linq;
+using TraderAzFunctions.Extensions;
 
 namespace TraderAzFunctions
 {
     /// <summary>
-    /// This Az Func returns list of all log entries from the ImportLog table for the requested time frame (in local time). 
+    /// This Az Func returns list of all log entries from the ImportLog table for the requested time frame (in the local time). 
     /// </summary>
     public static class GetAllLogsFunc
     {
-        private const string PolandTimeZoneName = "Central European Standard Time";
-
         [FunctionName("GetAllLogs")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
@@ -47,19 +45,13 @@ namespace TraderAzFunctions
 
                 await foreach (ImportLog entity in queryResults)
                 {
-                    // convert utc time to the local time in Poland  
-                    TimeZoneInfo myTimeZone = TimeZoneInfo.FindSystemTimeZoneById(PolandTimeZoneName);
-                    var utcTimeStamp = ((DateTimeOffset)entity.Timestamp).ToUniversalTime().DateTime;
-
-                    var locaTime = TimeZoneInfo.ConvertTimeFromUtc(utcTimeStamp, myTimeZone);
-
                     // in the real application I recommned to use Automapper 
                     result.Add(new ImportLogOutputDto
                     {
                         Id = entity.RowKey,
                         IsSucceded = entity.IsSucceded,
-                        Timestamp = locaTime
-                    });
+                        Timestamp = entity.Timestamp.ConvertUTCToPolandLocalTime()
+                });
                 }
 
                 // tableClient does not support OrderBy 
@@ -77,20 +69,15 @@ namespace TraderAzFunctions
             string from = req.Query["from"];
             string to = req.Query["to"];
 
-            // I have to make this time conversion, becuase code can be hosted in the different time zone where input dates are in the Warsaw time zone. 
-            TimeZoneInfo myTimeZone = TimeZoneInfo.FindSystemTimeZoneById(PolandTimeZoneName);
-            DateTimeOffset getDate = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, myTimeZone);
-            string TimeZoneId = " " + getDate.ToString("zzz");
-
             dateFrom = default;
             dateTo = default;
 
             // perform basic validation 
-            if (string.IsNullOrEmpty(from) || !DateTimeOffset.TryParse(from + TimeZoneId, out var cvFromDate))
+            if (string.IsNullOrEmpty(from) || !DateTime.TryParse(from, out var cvFromDate))
             {
                 return (false, "\"from\" parameter has invalid format!");
             }
-            if (string.IsNullOrEmpty(to) || !DateTimeOffset.TryParse(to + TimeZoneId, out var cvToDate))
+            if (string.IsNullOrEmpty(to) || !DateTime.TryParse(to, out var cvToDate))
             {
                 return (false, "\"to\" parameter has invalid format!");
             }
@@ -99,8 +86,9 @@ namespace TraderAzFunctions
                 return (false, "\"from\" can't be greater than \"to\" parameter !");
             }
 
-            dateFrom = cvFromDate.ToUniversalTime();
-            dateTo = cvToDate.ToUniversalTime();
+            // I have to make this time conversion, becuase application can be hosted on the different time zone.
+            dateFrom = cvFromDate.ConvertPolandLocalTimeToUTC();
+            dateTo = cvToDate.ConvertPolandLocalTimeToUTC();
 
             return (true, default);
         }

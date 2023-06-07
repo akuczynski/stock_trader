@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Net.Http;
-using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
@@ -26,8 +25,8 @@ namespace TraderAzFunctions
         [FunctionName("ImportExternalData")]
         [return: Table("ImportLog")]
         public async Task<ImportLog> Run([TimerTrigger("%ImportExternalDataSchedule%")] TimerInfo myTimer,
-                                                IBinder binder,
-                                                ILogger log)
+                                          IBinder binder,
+                                          ILogger log)
         {
             return await ImportData(binder, log);
         }
