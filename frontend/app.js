@@ -1,8 +1,6 @@
 webix.ready(function () {
   webix.CustomScroll.init();
 
-  var myFormat = webix.Date.dateToStr("%Y-%m-%d");
-
   webix.ui({
     rows: [
       {
