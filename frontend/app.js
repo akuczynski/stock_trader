@@ -1,5 +1,8 @@
 webix.ready(function () {
   webix.CustomScroll.init();
+
+  var myFormat = webix.Date.dateToStr("%Y-%m-%d");
+
   webix.ui({
     rows: [
       {
@@ -34,8 +37,7 @@ webix.ready(function () {
             click: function () {
               var datarange = this.getFormView().getValues().datarange;
 
-              var url =
-                "https://traderazfunctions.azurewebsites.net/api/GetAllLogs?";
+              var url = "/api/GetAllLogs?";
               url +=
                 "from=" +
                 encodeURIComponent(datarange.start) +
@@ -51,7 +53,7 @@ webix.ready(function () {
       {
         view: "datatable",
         id: "maintable",
-        url: "https://traderazfunctions.azurewebsites.net/api/GetAllLogs?from=2023-06-07%2008:00:00&to=2023-06-07%2016:00:00",
+        url: "/api/GetAllLogs?from=2023-06-07%2008:00:00&to=2023-06-07%2016:00:00",
         columns: [
           {
             id: "id",
@@ -84,9 +86,7 @@ webix.ready(function () {
             });
 
             if (selectedRow[0].isSucceded) {
-              var url = "https://traderazfunctions.azurewebsites.net/api/GetLog?id=" + logId;
-
-			  console.log(url);
+              var url = "/api/GetLog?id=" + logId;
 
               $$("subtable").clearAll();
               $$("subtable").load(url);
@@ -132,7 +132,7 @@ webix.ready(function () {
             hidden: false,
           },
         ],
-        url: "https://traderazfunctions.azurewebsites.net/api/GetLog?id=ca14ea32-9b65-498f-8792-5158a370c9fc",
+        url: "/api/GetLog?id=ca14ea32-9b65-498f-8792-5158a370c9fc",
       },
     ],
   });
