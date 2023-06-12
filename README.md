@@ -11,14 +11,25 @@ Short summary of the Az Funcs:
 
 ## Local testing 
 
+### Backend
+
 For local testing I have used [json server](https://www.npmjs.com/package/json-server)
+This allowed me to be indepented of accessibility of the external REST API. 
 
 Run Json server locally (working directory must be resources folder): 
 >json-server --watch reddit.json
 
-Important remark: Some of the unit tests (it is event better to call them integration tests) 
-require to run AzFunction project first. Those tests works well with the data hosted by the json server on the 
-local PC.
+Important remark: Some of the tests (integration tests) 
+require to run AzFunction project first. Those tests works well with the data hosted by the json server.
+
+### Frontend 
+
+Install [Live Server extension](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) to VS Code. 
+Open 'frontend' folder and run the project ('Go Live' option). 
+
+In Chrome add [Allow CORS: Access-Control-Allow-Origin extension](https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf?utm_source=googleads&utm_source=googleads&utm_campaign=19594216058&utm_medium=cpc&gclid=CjwKCAjwhJukBhBPEiwAniIcNS-ZaIZESXN_DWZsWgKcM9Uze5u85mQ5gHG-WFPaeltb1W8KwU8ZVhoCakQQAvD_BwE) to enable CORS on your localhost. 
+This is required as frontend and backend runs on different ports. 
+
 
 
 ### Interesting HOW TO arcticles

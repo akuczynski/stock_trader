@@ -40,7 +40,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{hostUrl}}/api/GetLog?id=f6895a96-40a8-4c2f-b459-61dd2a98d194",
+					"raw": "{{hostUrl}}/api/GetLog?id=ca14ea32-9b65-498f-8792-5158a370c9fc",
 					"host": [
 						"{{hostUrl}}"
 					],
@@ -51,7 +51,7 @@
 					"query": [
 						{
 							"key": "id",
-							"value": "f6895a96-40a8-4c2f-b459-61dd2a98d194"
+							"value": "ca14ea32-9b65-498f-8792-5158a370c9fc"
 						}
 					]
 				}
