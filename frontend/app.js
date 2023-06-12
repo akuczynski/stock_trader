@@ -85,8 +85,6 @@ webix.ready(function () {
               return obj.id == logId;
             });
 
-            console.log(selectedRow);
-
             if (selectedRow[0] !== undefined && selectedRow[0].isSucceded) {
               var url = baserUrl + "/api/GetLog?id=" + logId;
 
