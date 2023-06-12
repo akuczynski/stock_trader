@@ -4,3 +4,5 @@ backend/test/TradeAzFunctions.Tests/obj
 backend/src/TradeAzFunctions/Properties/serviceDependencies.local.json
 backend/test/TraderAzFunctions.Tests/bin
 backend/test/TraderAzFunctions.Tests/obj
+frontend/node_modules
+frontend/playwright-report
