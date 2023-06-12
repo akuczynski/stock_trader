@@ -2,6 +2,12 @@ webix.ready(function () {
   webix.CustomScroll.init();
   webix.i18n.setLocale("pl-PL");
 
+  var baserUrl = "";
+
+  if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+    baserUrl = "http://localhost:7151";
+  }
+
   webix.ui({
     rows: [
       {
@@ -36,13 +42,8 @@ webix.ready(function () {
             click: function () {
               var datarange = this.getFormView().getValues().datarange;
 
-              var url = "/api/GetAllLogs?";
-              url +=
-                "from=" +
-                encodeURIComponent(datarange.start) +
-                "&to=" +
-                encodeURIComponent(datarange.end);
-
+              var url = baserUrl + "/api/GetAllLogs?";
+              url += "from=" +  encodeURIComponent(datarange.start) + "&to=" + encodeURIComponent(datarange.end);
               $$("maintable").clearAll();
               $$("maintable").load(url);
             },
@@ -52,7 +53,7 @@ webix.ready(function () {
       {
         view: "datatable",
         id: "maintable",
-        url: "/api/GetAllLogs?from=2023-06-07%2008:00:00&to=2023-06-07%2016:00:00",
+        url: baserUrl + "/api/GetAllLogs?from=2023-06-07%2008:00:00&to=2023-06-07%2016:00:00",
         columns: [
           {
             id: "id",
@@ -84,15 +85,16 @@ webix.ready(function () {
               return obj.id == logId;
             });
 
-            if (selectedRow[0].isSucceded) {
-              var url = "/api/GetLog?id=" + logId;
+            console.log(selectedRow);
+
+            if (selectedRow[0] !== undefined && selectedRow[0].isSucceded) {
+              var url = baserUrl + "/api/GetLog?id=" + logId;
 
               $$("subtable").clearAll();
               $$("subtable").load(url);
+            } else {
+              $$("subtable").clearAll();
             }
-			else {
-			  $$("subtable").clearAll();
-			}
           },
         },
         select: "row",
@@ -131,7 +133,7 @@ webix.ready(function () {
             hidden: false,
           },
         ],
-        url: "/api/GetLog?id=ca14ea32-9b65-498f-8792-5158a370c9fc",
+        url: baserUrl + "/api/GetLog?id=ca14ea32-9b65-498f-8792-5158a370c9fc",
       },
     ],
   });
