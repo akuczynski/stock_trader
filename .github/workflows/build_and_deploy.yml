@@ -33,6 +33,7 @@ jobs:
           ###### End of Repository/Build Configurations ######
   test:
     needs: build_and_deploy_job
+    name: Run e2e tests Job
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
