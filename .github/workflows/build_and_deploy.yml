@@ -32,6 +32,7 @@ jobs:
           output_location: "/" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
   test:
+    needs: build_and_deploy_job
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
