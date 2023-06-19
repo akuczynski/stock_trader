@@ -2,12 +2,15 @@
 
 This project contains implementation of the three simple Az Functions. 
 This was a technical task of the one company to which I had applied.  
+It imports stock data from the external source, not all imports will succeed. 
+Use UI to check which imports have succeed and data which was imported.
+
+![Screenshot](resources/ui.png)
 
 Short summary of the Az Funcs: 
 - <b>ImportExternalData</b> - this is Time Triggered function, it is responsible for fetching data from the external REST API 
 - <b>GetAllLogs</b> - GET API call to list all logs for the specific time period (from/to) 
 - <b>GetLog</b> - GET API call to fetch a payload from blob for the specific log entry
-
 
 ## Local testing 
 
