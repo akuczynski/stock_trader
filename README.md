@@ -1,7 +1,7 @@
 # About
 
 This project contains implementation of the three simple Az Functions. 
-This was a technical task of the one company to which I had applied.  
+This was a technical task of the one company to which I had applied.
 It imports stock data from the external source, not all imports will succeed. 
 Use UI to check which imports have succeed and data which was imported.
 
