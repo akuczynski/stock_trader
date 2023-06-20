@@ -11,7 +11,7 @@ namespace TraderAzFunctions.InputDtos
         public string Sentiment { get; set; }
 
         [JsonProperty("sentiment_score")]
-        public double SentimentScore { get; set; }
+        public double? SentimentScore { get; set; }
 
         [JsonProperty("ticker")]
         public string Ticker { get; set; }
